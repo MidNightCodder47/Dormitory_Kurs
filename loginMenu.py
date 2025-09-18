@@ -1,7 +1,7 @@
 import sys
 import sqlite3
 
-import HomePage
+import MainWindow
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget,QHBoxLayout, QVBoxLayout,QLabel, QLineEdit, QPushButton, QMessageBox
 
@@ -77,8 +77,8 @@ class LoginWindow(QMainWindow):
         form_layout.addStretch()
 
     def open_home_page(self):
-        self.home_window = HomePage.HomeWindow(self.current_user_id)
-        self.home_window.show()
+        self.main_window = MainWindow.MainWindow(self.current_user_id)
+        self.main_window.show()
         self.close()
 
     def on_login_clicked(self):
@@ -98,7 +98,7 @@ class LoginWindow(QMainWindow):
 
         if result:
             self.current_user_id = result[0]
-            QMessageBox.warning(self, "Успех", f"Добро пожаловать, {login}!")
+            # QMessageBox.warning(self, "Успех", f"Добро пожаловать, {login}!")
             self.open_home_page()
 
         else:
