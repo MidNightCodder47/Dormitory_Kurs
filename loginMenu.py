@@ -8,6 +8,8 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget,QHBoxLayout, QVBo
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 
+import MainWindowCode
+import MainWindowV2
 
 conn = sqlite3.connect('hotel.db')
 c = conn.cursor()
@@ -76,8 +78,8 @@ class LoginWindow(QMainWindow):
         # Добавляем растягивающийся элемент для центрирования
         form_layout.addStretch()
 
-    def open_home_page(self):
-        self.main_window = MainWindow.MainWindow(self.current_user_id)
+    def open_home_page(self,user_id):
+        self.main_window = MainWindowCode.MainUserWindow(user_id)
         self.main_window.show()
         self.close()
 
@@ -99,7 +101,7 @@ class LoginWindow(QMainWindow):
         if result:
             self.current_user_id = result[0]
             # QMessageBox.warning(self, "Успех", f"Добро пожаловать, {login}!")
-            self.open_home_page()
+            self.open_home_page(self.current_user_id)
 
         else:
 
