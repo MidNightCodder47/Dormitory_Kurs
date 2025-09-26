@@ -11,7 +11,7 @@ from PyQt6.QtGui import QFont
 import MainWindowCode
 import MainWindowV2
 
-conn = sqlite3.connect('hotel.db')
+conn = sqlite3.connect('../hotel.db')
 c = conn.cursor()
 
 
@@ -22,6 +22,7 @@ class LoginWindow(QMainWindow):
         self.setWindowTitle("Авторизация")
         self.setFixedSize(700, 500)
         self.current_id = None
+
 
         # Создаем центральный виджет
         central_widget = QWidget()
@@ -38,6 +39,7 @@ class LoginWindow(QMainWindow):
 
         center_layout.addLayout(form_layout)
         center_layout.addStretch()
+
 
         main_layout.addLayout(center_layout)
         main_layout.addStretch()
@@ -111,10 +113,6 @@ class LoginWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-
-    # Устанавливаем стиль приложения
-    app.setStyle('Fusion')
-
     window = LoginWindow()
     window.show()
 

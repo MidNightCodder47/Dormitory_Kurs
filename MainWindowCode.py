@@ -1,4 +1,6 @@
-from PyQt6.QtWidgets import QDialog, QApplication
+from PyQt6.QtWidgets import QDialog, QApplication, QLabel
+from PyQt6.uic.Compiler.qtproxies import QtWidgets
+from PyQt6 import QtGui
 
 from MainWindowV2 import MainWindow
 import sys
@@ -13,6 +15,7 @@ class MainUserWindow(MainWindow):
         super().__init__()
         self.user_id = user_id
         self.get_user_data()
+        # self.load_neighbours()
 
 
     def get_user_data(self):
@@ -39,15 +42,31 @@ class MainUserWindow(MainWindow):
         self.user_login.setText(f"Логин: {self.login}")
         self.user_room.setText(f"Номер комнаты: {self.room_num}")
 
-        # self.c.execute(
-        #     "SELECT user_balance,month_price FROM finance WHERE contract = ?",(self.contract,))
-        # result = self.c.fetchone()
-        #
-        # self.balance = result[0]
-        # self.month_price = result[1]
-        #
-        # self.user_credit.setText(f"{self.balance}")
-        # self.price_per_month.setText(f"{self.month_price}")
+
+        self.c.execute('''SELECT lastname,firstname,patronymic FROM user WHERE room_num = ? and id_user != ?''', (self.room_num,self.user_id,))
+        neighbours = self.c.fetchall()
+
+        for last_name, first_name, middle_name in neighbours:
+            full_name = f"{last_name} {first_name} {middle_name or ''}"
+            label = QLabel(full_name)
+            font = QtGui.QFont()
+            font.setFamily("Bahnschrift")
+            font.setPointSize(13)
+            label.setFont(font)
+            self.scroll_layout_2.addWidget(label)
+        self.scroll_layout_2.addStretch()
+
+
+
+        self.c.execute(
+            "SELECT user_balance,month_price FROM finance WHERE contract = ?",(self.contract,))
+        result = self.c.fetchone()
+
+        self.balance = result[0]
+        self.month_price = result[1]
+
+        self.user_credit.setText(f"{self.balance}")
+        self.price_per_month.setText(f"{self.month_price}")
 
 
 

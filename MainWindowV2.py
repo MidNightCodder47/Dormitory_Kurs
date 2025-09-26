@@ -82,14 +82,22 @@ class MainWindow(QDialog):
         font.setPointSize(13)
         self.label_15.setFont(font)
         self.label_15.setObjectName("label_15")
+
         self.scrollArea_2 = QtWidgets.QScrollArea(parent=self.frame_2)
         self.scrollArea_2.setGeometry(QtCore.QRect(10, 120, 251, 251))
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
-        self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 251, 251))
-        self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
+
+        self.scroll_widget_2 = QtWidgets.QWidget()
+        self.scroll_layout_2 = QtWidgets.QVBoxLayout(self.scroll_widget_2)
+        self.scroll_layout_2.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        # self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
+        # self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 251, 251))
+        #
+        # self.scrollAreaWidgetContents_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
+        # self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
+        self.scrollArea_2.setWidget(self.scroll_widget_2)
+
         self.frame_3 = QtWidgets.QFrame(parent=self.Info)
         self.frame_3.setGeometry(QtCore.QRect(10, 110, 371, 311))
         self.frame_3.setStyleSheet("border-radius: 15;\n"

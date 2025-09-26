@@ -31,10 +31,12 @@ conn.commit()
 
 c.execute('''INSERT INTO user (user_login, user_password, firstname, lastname,patronymic,room_num,contract,mail) 
           VALUES ('123', '123', 'Petr','Ivanov','Olegovich', '101A','AB001','example@mail.com'),
-                ('1234', '1234', 'Vanya','Ptichkin','', '102A','AB002','example2@mail.com')''')
+                ('1234', '1234', 'Vanya','Ptichkin','', '101A','AB002','example2@mail.com')''')
 
 
-c.execute("Insert Into finance (contract,user_balance) Values ('AB001',100)")
+c.execute('''Insert Into finance (contract,user_balance)
+            Values ('AB001',100),
+                     ('AB002',200)''')
 conn.commit()
 
 print("Data inserted successfully.")

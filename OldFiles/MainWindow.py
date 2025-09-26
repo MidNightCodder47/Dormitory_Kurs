@@ -19,7 +19,7 @@ class MainWindow(QDialog):
         self.setupUi(self)
 
     def load_user_data(self):
-        self.conn = sqlite3.connect('hotel.db')
+        self.conn = sqlite3.connect('../hotel.db')
         self.c = self.conn.cursor()
         self.c.execute("SELECT firstname,lastname,patronymic,room_num,contract,phone FROM user WHERE id_user = ?",(self.user_id,))
         result = self.c.fetchone()
