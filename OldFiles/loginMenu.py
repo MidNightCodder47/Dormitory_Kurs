@@ -1,7 +1,8 @@
 import sys
 import sqlite3
 
-import MainWindow
+from PyQt6 import QtCore,QtWidgets
+
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget,QHBoxLayout, QVBoxLayout,QLabel, QLineEdit, QPushButton, QMessageBox
 
@@ -14,6 +15,12 @@ import MainWindowV2
 conn = sqlite3.connect('../hotel.db')
 c = conn.cursor()
 
+class ClickLabel(QLabel):
+    clicked = QtCore.pyqtSignal()
+
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
+        self.clicked.emit()
 
 
 class LoginWindow(QMainWindow):
@@ -44,7 +51,8 @@ class LoginWindow(QMainWindow):
         main_layout.addLayout(center_layout)
         main_layout.addStretch()
 
-        welcome_label = QLabel("Добро пожаловать")
+        welcome_label = ClickLabel('ТЕСТ')
+        welcome_label.clicked.connect(lambda: welcome_label.setText("OK"))
         welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         welcome_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
         form_layout.addWidget(welcome_label)

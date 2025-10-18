@@ -4,6 +4,8 @@ import sys
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QApplication, QDialog
 
+# from MainWindowCode import ClickLabel
+
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -91,11 +93,6 @@ class MainWindow(QDialog):
         self.scroll_widget_2 = QtWidgets.QWidget()
         self.scroll_layout_2 = QtWidgets.QVBoxLayout(self.scroll_widget_2)
         self.scroll_layout_2.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-        # self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        # self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 251, 251))
-        #
-        # self.scrollAreaWidgetContents_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_2)
-        # self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.scrollArea_2.setWidget(self.scroll_widget_2)
 
         self.frame_3 = QtWidgets.QFrame(parent=self.Info)
@@ -243,10 +240,8 @@ class MainWindow(QDialog):
         self.scrollArea_3.setGeometry(QtCore.QRect(9, 49, 321, 351))
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
-        self.scrollAreaWidgetContents_3 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_3.setGeometry(QtCore.QRect(0, 0, 321, 351))
-        self.scrollAreaWidgetContents_3.setObjectName("scrollAreaWidgetContents_3")
-        self.scrollArea_3.setWidget(self.scrollAreaWidgetContents_3)
+
+
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -266,6 +261,7 @@ class MainWindow(QDialog):
 "background-color:  rgb(229, 229, 229)")
         self.frame_8.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         self.frame_8.setObjectName("frame_8")
+
         self.scrollArea = QtWidgets.QScrollArea(parent=self.frame_8)
         self.scrollArea.setGeometry(QtCore.QRect(10, 30, 641, 301))
         self.scrollArea.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
@@ -273,10 +269,14 @@ class MainWindow(QDialog):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
 
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 641, 301))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.scroll_widget_app = QtWidgets.QWidget()
+        self.scroll_layout_app = QtWidgets.QVBoxLayout(self.scroll_widget_app)
+        self.scroll_layout_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        self.scrollArea.setWidget(self.scroll_widget_app)
+
+
+
         self.label_8 = QtWidgets.QLabel(parent=self.frame_8)
         self.label_8.setGeometry(QtCore.QRect(20, 10, 91, 16))
         font = QtGui.QFont()

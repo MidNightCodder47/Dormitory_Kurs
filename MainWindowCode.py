@@ -1,7 +1,10 @@
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QMouseEvent
 from PyQt6.QtWidgets import QDialog, QApplication, QLabel
 from PyQt6.uic.Compiler.qtproxies import QtWidgets
-from PyQt6 import QtGui
+from PyQt6 import QtGui, QtCore
 
+import applicationCode
 from MainWindowV2 import MainWindow
 import sys
 import sqlite3
@@ -9,14 +12,55 @@ import sqlite3
 conn = sqlite3.connect('hotel.db')
 c = conn.cursor()
 
+class ClickLabel(QLabel):
+    clicked = QtCore.pyqtSignal()
+
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
+        self.clicked.emit()
+
 
 class MainUserWindow(MainWindow):
+
+
     def __init__(self,user_id):
         super().__init__()
         self.user_id = user_id
         self.get_user_data()
-        # self.load_neighbours()
+        self.button_add_doc.clicked.connect(self.on_add_app_clicked)
+    def upd_applications(self):
 
+        while self.scroll_layout_app.count():
+            current = self.scroll_layout_app.takeAt(0)
+            if current.widget():
+                current.widget().deleteLater()
+        self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',
+                       (self.user_id,))
+        applications = self.c.fetchall()
+
+        for id, title, date_app in applications:
+            app = f"{id} {title} {date_app}"
+            label_app = QLabel(app)
+            font = QtGui.QFont()
+            font.setFamily("Bahnschrift")
+            font.setPointSize(13)
+            label_app.setFont(font)
+            self.scroll_layout_app.addWidget(label_app)
+        self.scroll_layout_app.addStretch()
+
+    def on_add_app_clicked(self):
+        self.appwindow = applicationCode.Application(self.user_id,self)
+        self.appwindow.show()
+
+    clicked = QtCore.pyqtSignal()
+
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
+        self.clicked.emit()
+
+    def open_application(self,event,id):
+        if isinstance(event, QMouseEvent):
+            print(f"переход{id}")
 
     def get_user_data(self):
         self.conn = sqlite3.connect('hotel.db')
@@ -67,6 +111,34 @@ class MainUserWindow(MainWindow):
 
         self.user_credit.setText(f"{self.balance}")
         self.price_per_month.setText(f"{self.month_price}")
+        try:
+            # welcome_label = ClickLabel('ТЕСТ')
+            # welcome_label.clicked.connect(lambda: welcome_label.setText("OK"))
+            # welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            # welcome_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
+            # form_layout.addWidget(welcome_label)
+
+            self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',(self.user_id,))
+            applications = self.c.fetchall()
+
+            for id,title,date_app in applications:
+                app = f"{id} {title} {date_app}"
+                label_app = ClickLabel(app)
+                font = QtGui.QFont()
+                font.setFamily("Bahnschrift")
+                font.setPointSize(13)
+                label_app.setFont(font)
+                label_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
+                label_app.setWordWrap(True)
+
+                label_app.mousePressEvent = self.open_application(id=id,event=QMouseEvent)
+
+                self.scroll_layout_app.addWidget(label_app)
+            self.scroll_layout_app.addStretch()
+
+
+        except Exception as e:
+            print(e)
 
 
 

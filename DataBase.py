@@ -4,8 +4,11 @@ conn = sqlite3.connect('hotel.db')
 c = conn.cursor()
 
 c.execute('DROP TABLE IF EXISTS user')
-c.execute('DROP TABLE IF EXISTS finance')#Для тестов После удалить
+c.execute('DROP TABLE IF EXISTS finance')
+c.execute('DROP TABLE IF EXISTS application')
+#Для тестов После удалить
 c.execute('PRAGMA foreign_keys = ON')
+
 c.execute('''
     CREATE TABLE IF NOT EXISTS user (
         id_user Integer PRIMARY KEY AUTOINCREMENT,
@@ -26,6 +29,15 @@ c.execute('''
         contract varchar(20) unique,
         month_price integer default 0 not null,
         FOREIGN KEY (contract) REFERENCES user (contract))''')
+
+c.execute('''
+    Create TABLE IF NOT EXISTS application (
+        id_application integer PRIMARY KEY AUTOINCREMENT,
+        app_title varchar(50) NOT NULL,
+        app_text TEXT NOT NULL,
+        user_id INTEGER NOT NULL,
+        app_date Varchar(20) NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES user (id_user))''')
 conn.commit()
 
 
@@ -39,14 +51,8 @@ c.execute('''Insert Into finance (contract,user_balance)
                      ('AB002',200)''')
 conn.commit()
 
+
 print("Data inserted successfully.")
-
-
-
-c.execute("SELECT * FROM finance")
-rows = c.fetchall()
-for row in rows:
-    print(f"{row[0]}, {row[1]}, {row[2]}")
 
 
 c.close()
