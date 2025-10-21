@@ -11,6 +11,14 @@ class win_text(Ui_Dialog):
         self.app_id = app_id
         self.load_data(app_id)
 
-    def load_data(self,app_id):
-        self.app_id = app_id
-        c.execute('''SELECT * FROM application WHERE app_id = ?''',(self.app_id,))
+    def load_data(self,id):
+        self.app_id = id
+        c.execute('''SELECT app_title,app_text,app_date FROM application WHERE id_application = ?''',(self.app_id,))
+        res = c.fetchone()
+        title = res[0]
+        text = res[1]
+        date = res[2]
+
+        self.app_title.setText(title)
+        self.app_text.setText(text)
+        self.app_date.setText(date)

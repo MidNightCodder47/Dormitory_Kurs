@@ -301,10 +301,12 @@ class MainWindow(QDialog):
         self.scrollArea_4.setStyleSheet("background-color: transparent;")
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollArea_4.setObjectName("scrollArea_4")
-        self.scrollAreaWidgetContents_4 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_4.setGeometry(QtCore.QRect(0, 0, 651, 411))
-        self.scrollAreaWidgetContents_4.setObjectName("scrollAreaWidgetContents_4")
-        self.scrollArea_4.setWidget(self.scrollAreaWidgetContents_4)
+
+        self.scroll_widget_4 = QtWidgets.QWidget()
+        self.scroll_layout_4 = QtWidgets.QVBoxLayout(self.scroll_widget_4)
+        self.scroll_layout_4.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        self.scrollArea_4.setWidget(self.scroll_widget_4)
+
         self.tabWidget.addTab(self.tab_31, "")
         self.label_13 = QtWidgets.QLabel(parent=Dialog)
         self.label_13.setGeometry(QtCore.QRect(210, 30, 321, 41))

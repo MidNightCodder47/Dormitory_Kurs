@@ -22,7 +22,6 @@ class Login(Ui_MainWindow):
         self.close()
 
     def on_login_clicked(self):
-        """Обработчик нажатия кнопки Войти"""
         login = self.login_widget.text()
         password = self.password_widget.text()
 

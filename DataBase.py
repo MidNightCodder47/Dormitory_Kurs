@@ -5,7 +5,8 @@ c = conn.cursor()
 
 c.execute('DROP TABLE IF EXISTS user')
 c.execute('DROP TABLE IF EXISTS finance')
-c.execute('DROP TABLE IF EXISTS application')
+# c.execute('DROP TABLE IF EXISTS application')
+c.execute('DROP TABLE IF EXISTS post')
 #Для тестов После удалить
 c.execute('PRAGMA foreign_keys = ON')
 
@@ -38,6 +39,14 @@ c.execute('''
         user_id INTEGER NOT NULL,
         app_date Varchar(20) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES user (id_user))''')
+try:
+	c.execute('''
+		CREATE TABLE IF NOT EXISTS post(
+			id_post integer PRIMARY KEY AUTOINCREMENT,
+			post_title text NOT NULL,
+			post_date varchar(50) NOT NULL)''')
+except Exception as e:
+	print(e)
 conn.commit()
 
 
@@ -49,6 +58,9 @@ c.execute('''INSERT INTO user (user_login, user_password, firstname, lastname,pa
 c.execute('''Insert Into finance (contract,user_balance)
             Values ('AB001',100),
                      ('AB002',200)''')
+c.execute('''INSERT INTO post (post_title, post_date)
+			Values ('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01'),
+					('C днем знаний!','2025-09-01')''')
 conn.commit()
 
 

@@ -5,9 +5,9 @@ from datetime import date
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import QApplication, QDialog, QMessageBox, QLabel
 
-import MainWindowCode
+
 from applicationUi import Ui_Dialog
-from MainWindowCode import MainUserWindow
+
 
 conn = sqlite3.connect('hotel.db')
 c = conn.cursor()

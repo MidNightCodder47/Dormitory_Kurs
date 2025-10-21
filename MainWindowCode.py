@@ -1,39 +1,52 @@
-from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QMouseEvent
-from PyQt6.QtWidgets import QDialog, QApplication, QLabel
-from PyQt6.uic.Compiler.qtproxies import QtWidgets
+from PyQt6.QtWidgets import QDialog, QApplication, QLabel, QWidget, QVBoxLayout, QListWidget, QListWidgetItem
 from PyQt6 import QtGui, QtCore
 
+import app_win_text_code
 import applicationCode
 from MainWindowV2 import MainWindow
 import sys
 import sqlite3
 
-conn = sqlite3.connect('hotel.db')
-c = conn.cursor()
 
-class ClickLabel(QLabel):
-    clicked = QtCore.pyqtSignal()
+class TextItemWidget(QWidget):
+    def __init__(self,text):
+        super().__init__()
 
-    def mousePressEvent(self, event):
-        super().mousePressEvent(event)
-        self.clicked.emit()
+        layout = QVBoxLayout()
+        layout.setContentsMargins(10,5,10,5)
+
+        self.label = QLabel(text)
+        font = QtGui.QFont()
+        font.setFamily("Bahnschrift")
+        font.setPointSize(13)
+        self.label.setFont(font)
+        self.label.setWordWrap(True)
+
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
 
 class MainUserWindow(MainWindow):
-
-
     def __init__(self,user_id):
         super().__init__()
         self.user_id = user_id
+
+        self.list_post = QListWidget()
+
+        self.fill_posts()
+        self.scroll_layout_4.addWidget(self.list_post)
+        self.scroll_layout_4.addStretch()
+
         self.get_user_data()
         self.button_add_doc.clicked.connect(self.on_add_app_clicked)
-    def upd_applications(self):
 
+    def upd_applications(self):
         while self.scroll_layout_app.count():
             current = self.scroll_layout_app.takeAt(0)
             if current.widget():
                 current.widget().deleteLater()
+
         self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',
                        (self.user_id,))
         applications = self.c.fetchall()
@@ -45,6 +58,10 @@ class MainUserWindow(MainWindow):
             font.setFamily("Bahnschrift")
             font.setPointSize(13)
             label_app.setFont(font)
+            label_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
+            label_app.setWordWrap(True)
+
+            label_app.mousePressEvent = lambda e, app_id=id: self.open_application(e, app_id)
             self.scroll_layout_app.addWidget(label_app)
         self.scroll_layout_app.addStretch()
 
@@ -52,15 +69,12 @@ class MainUserWindow(MainWindow):
         self.appwindow = applicationCode.Application(self.user_id,self)
         self.appwindow.show()
 
-    clicked = QtCore.pyqtSignal()
 
-    def mousePressEvent(self, event):
-        super().mousePressEvent(event)
-        self.clicked.emit()
-
-    def open_application(self,event,id):
+    def open_application(self,event,app_id):
         if isinstance(event, QMouseEvent):
-            print(f"переход{id}")
+            self.app_text_window = app_win_text_code.win_text(app_id)
+            self.app_text_window.show()
+
 
     def get_user_data(self):
         self.conn = sqlite3.connect('hotel.db')
@@ -101,7 +115,6 @@ class MainUserWindow(MainWindow):
         self.scroll_layout_2.addStretch()
 
 
-
         self.c.execute(
             "SELECT user_balance,month_price FROM finance WHERE contract = ?",(self.contract,))
         result = self.c.fetchone()
@@ -111,37 +124,60 @@ class MainUserWindow(MainWindow):
 
         self.user_credit.setText(f"{self.balance}")
         self.price_per_month.setText(f"{self.month_price}")
+
+        self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',(self.user_id,))
+        applications = self.c.fetchall()
+
+        for id,title,date_app in applications:
+            app = f"{id} {title} {date_app}"
+            label_app = QLabel(app)
+            font = QtGui.QFont()
+            font.setFamily("Bahnschrift")
+            font.setPointSize(13)
+            label_app.setFont(font)
+            label_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
+            label_app.setWordWrap(True)
+
+            label_app.mousePressEvent = lambda e, app_id=id:self.open_application(e,app_id)
+            self.scroll_layout_app.addWidget(label_app)
+        self.scroll_layout_app.addStretch()
+
+    def fill_posts(self):
+        """Заполняет список постов один раз при создании"""
         try:
-            # welcome_label = ClickLabel('ТЕСТ')
-            # welcome_label.clicked.connect(lambda: welcome_label.setText("OK"))
-            # welcome_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            # welcome_label.setFont(QFont("Arial", 16, QFont.Weight.Bold))
-            # form_layout.addWidget(welcome_label)
+            conn = sqlite3.connect('hotel.db')
+            c = conn.cursor()
 
-            self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',(self.user_id,))
-            applications = self.c.fetchall()
+            c.execute('''SELECT post_title, post_date FROM post ORDER BY id_post DESC''')
+            posts = c.fetchall()
 
-            for id,title,date_app in applications:
-                app = f"{id} {title} {date_app}"
-                label_app = ClickLabel(app)
-                font = QtGui.QFont()
-                font.setFamily("Bahnschrift")
-                font.setPointSize(13)
-                label_app.setFont(font)
-                label_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
-                label_app.setWordWrap(True)
+            for post_title, post_date in posts:
+                text = f"{post_title}\n\n{post_date}"
+                widget = TextItemWidget(text)
+                item = QListWidgetItem()
+                item.setSizeHint(widget.sizeHint())
 
-                label_app.mousePressEvent = self.open_application(id=id,event=QMouseEvent)
+                self.list_post.addItem(item)
+                self.list_post.setItemWidget(item, widget)
 
-                self.scroll_layout_app.addWidget(label_app)
-            self.scroll_layout_app.addStretch()
-
-
+            conn.close()
         except Exception as e:
-            print(e)
+            print(f"Error filling posts: {e}")
 
-
-
+        #
+        # self.c.execute('''SELECT post_title,post_date from post''')
+        # posts = self.c.fetchall()
+        # for post_title, post_date in posts:
+        #     text = f"{post_title} \n \n {post_date}"
+        #     widget = TextItemWidget(text)
+        #     item = QListWidgetItem()
+        #     item.setSizeHint(widget.sizeHint())
+        #
+        #     self.list_post.addItem(item)
+        #     self.list_post.setItemWidget(item,widget)
+        #
+        # self.scroll_layout_4.addWidget(self.list_post)
+        # self.scroll_layout_4.addStretch()
 
 
 if __name__ == "__main__":
@@ -150,12 +186,3 @@ if __name__ == "__main__":
     window.setWindowTitle("Home page")
     window.show()
     sys.exit(app.exec())
-
-
-    
-
-
-
-
-
-

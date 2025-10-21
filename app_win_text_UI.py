@@ -7,9 +7,10 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtWidgets import QDialog
 
 
-class Ui_Dialog(object):
+class Ui_Dialog(QDialog):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 580)
@@ -25,7 +26,7 @@ class Ui_Dialog(object):
         self.label_title.setGeometry(QtCore.QRect(10, 10, 141, 16))
         font = QtGui.QFont()
         font.setFamily("Bahnschrift")
-        font.setPointSize(12)
+        font.setPointSize(11)
         font.setBold(True)
         font.setKerning(False)
         self.label_title.setFont(font)
@@ -34,7 +35,7 @@ class Ui_Dialog(object):
         self.app_title.setGeometry(QtCore.QRect(10, 30, 631, 31))
         font = QtGui.QFont()
         font.setFamily("Bahnschrift")
-        font.setPointSize(28)
+        font.setPointSize(15)
         self.app_title.setFont(font)
         self.app_title.setText("")
         self.app_title.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify|QtCore.Qt.AlignmentFlag.AlignVCenter)
@@ -50,7 +51,7 @@ class Ui_Dialog(object):
         self.label_text.setGeometry(QtCore.QRect(10, 10, 141, 16))
         font = QtGui.QFont()
         font.setFamily("Bahnschrift")
-        font.setPointSize(12)
+        font.setPointSize(11)
         font.setBold(True)
         font.setKerning(False)
         self.label_text.setFont(font)
@@ -59,10 +60,10 @@ class Ui_Dialog(object):
         self.app_text.setGeometry(QtCore.QRect(10, 30, 631, 351))
         font = QtGui.QFont()
         font.setFamily("Bahnschrift")
-        font.setPointSize(28)
+        font.setPointSize(15)
         self.app_text.setFont(font)
         self.app_text.setText("")
-        self.app_text.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify|QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.app_text.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify|QtCore.Qt.AlignmentFlag.AlignTop)
         self.app_text.setWordWrap(True)
         self.app_text.setObjectName("app_text")
         self.app_date = QtWidgets.QLabel(parent=self.frame_2)
