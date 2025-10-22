@@ -1,19 +1,16 @@
 import sys
 import sqlite3
 from PyQt6.QtWidgets import QApplication, QMessageBox
-
 import MainWindowCode
 from LoginUI import Ui_MainWindow
 
 conn = sqlite3.connect('hotel.db')
 c = conn.cursor()
 
-
 class Login(Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.current_id = None
-
         self.logIn_btn.clicked.connect(self.on_login_clicked)
 
     def open_home_page(self,user_id):
@@ -54,7 +51,6 @@ if __name__ == "__main__":
             color: black;
         }
     """)
-
     window = Login()
     window.setWindowTitle("Login page")
     window.show()

@@ -31,13 +31,11 @@ class MainUserWindow(MainWindow):
     def __init__(self,user_id):
         super().__init__()
         self.user_id = user_id
-
         self.list_post = QListWidget()
 
         self.fill_posts()
         self.scroll_layout_4.addWidget(self.list_post)
         self.scroll_layout_4.addStretch()
-
         self.get_user_data()
         self.button_add_doc.clicked.connect(self.on_add_app_clicked)
 
@@ -69,12 +67,10 @@ class MainUserWindow(MainWindow):
         self.appwindow = applicationCode.Application(self.user_id,self)
         self.appwindow.show()
 
-
     def open_application(self,event,app_id):
         if isinstance(event, QMouseEvent):
             self.app_text_window = app_win_text_code.win_text(app_id)
             self.app_text_window.show()
-
 
     def get_user_data(self):
         self.conn = sqlite3.connect('hotel.db')
@@ -143,42 +139,20 @@ class MainUserWindow(MainWindow):
         self.scroll_layout_app.addStretch()
 
     def fill_posts(self):
-        """Заполняет список постов один раз при создании"""
-        try:
-            conn = sqlite3.connect('hotel.db')
-            c = conn.cursor()
+        self.conn = sqlite3.connect('hotel.db')
+        self.c = self.conn.cursor()
+        self.c.execute('''SELECT post_title, post_date FROM post ORDER BY id_post DESC''')
+        posts = self.c.fetchall()
 
-            c.execute('''SELECT post_title, post_date FROM post ORDER BY id_post DESC''')
-            posts = c.fetchall()
+        for post_title, post_date in posts:
+            text = f"{post_title}\n\n{post_date}"
+            widget = TextItemWidget(text)
+            item = QListWidgetItem()
+            item.setSizeHint(widget.sizeHint())
 
-            for post_title, post_date in posts:
-                text = f"{post_title}\n\n{post_date}"
-                widget = TextItemWidget(text)
-                item = QListWidgetItem()
-                item.setSizeHint(widget.sizeHint())
-
-                self.list_post.addItem(item)
-                self.list_post.setItemWidget(item, widget)
-
-            conn.close()
-        except Exception as e:
-            print(f"Error filling posts: {e}")
-
-        #
-        # self.c.execute('''SELECT post_title,post_date from post''')
-        # posts = self.c.fetchall()
-        # for post_title, post_date in posts:
-        #     text = f"{post_title} \n \n {post_date}"
-        #     widget = TextItemWidget(text)
-        #     item = QListWidgetItem()
-        #     item.setSizeHint(widget.sizeHint())
-        #
-        #     self.list_post.addItem(item)
-        #     self.list_post.setItemWidget(item,widget)
-        #
-        # self.scroll_layout_4.addWidget(self.list_post)
-        # self.scroll_layout_4.addStretch()
-
+            self.list_post.addItem(item)
+            self.list_post.setItemWidget(item, widget)
+        self.conn.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
