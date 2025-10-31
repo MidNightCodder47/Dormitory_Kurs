@@ -1,9 +1,11 @@
 import sys
+from pathlib import Path
+
 from app_win_text_UI import Ui_Dialog
 import sqlite3
-connect = sqlite3.connect('hotel.db')
-c = connect.cursor()
-
+root_dir = Path(__file__).parent.parent
+conn = sqlite3.connect(str(root_dir / 'hotel.db'))
+c = conn.cursor()
 class win_text(Ui_Dialog):
     def __init__(self,app_id):
         super().__init__()

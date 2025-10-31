@@ -13,11 +13,11 @@ c.execute('PRAGMA foreign_keys = ON')
 c.execute('''
     CREATE TABLE IF NOT EXISTS user (
         id_user Integer PRIMARY KEY AUTOINCREMENT,
+        lastname varchar(20) NOT NULL,
+        firstname varchar(20) NOT NULL,
+        patronymic varchar(20) default '',
         user_login varchar(20) unique NOT NULL,
         user_password varchar(20) NOT NULL,
-        firstname varchar(20) NOT NULL,
-        lastname varchar(20) NOT NULL,
-        patronymic varchar(20) default '',
         room_num varchar(7) NOT NULL,
         contract varchar(20) unique,
         phone varchar(15) unique,
@@ -50,9 +50,9 @@ except Exception as e:
 conn.commit()
 
 
-c.execute('''INSERT INTO user (user_login, user_password, firstname, lastname,patronymic,room_num,contract,mail) 
-          VALUES ('123', '123', 'Petr','Ivanov','Olegovich', '101A','AB001','example@mail.com'),
-                ('1234', '1234', 'Vanya','Ptichkin','', '101A','AB002','example2@mail.com')''')
+c.execute('''INSERT INTO user (lastname, firstname,patronymic,user_login, user_password,room_num,contract,mail) 
+          VALUES ('Ivanov', 'Petr','Olegovich','123', '123', '101A','AB001','example@mail.com'),
+                ('Ptichkin', 'Vanya','','1234', '1234', '101A','AB002','example2@mail.com')''')
 
 
 c.execute('''Insert Into finance (contract,user_balance)

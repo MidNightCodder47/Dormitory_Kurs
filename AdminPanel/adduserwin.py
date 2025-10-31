@@ -1,0 +1,55 @@
+
+from PyQt6 import QtCore, QtGui, QtWidgets
+
+
+class userUI(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(361, 430)
+        self.ntrfirst = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrfirst.setGeometry(QtCore.QRect(20, 60, 321, 31))
+        self.ntrfirst.setObjectName("ntrfirst")
+        self.ntrlast = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrlast.setGeometry(QtCore.QRect(20, 20, 321, 31))
+        self.ntrlast.setObjectName("ntrlast")
+        self.ntrthird = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrthird.setGeometry(QtCore.QRect(20, 100, 321, 31))
+        self.ntrthird.setObjectName("ntrthird")
+        self.ntrlogin = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrlogin.setGeometry(QtCore.QRect(20, 140, 321, 31))
+        self.ntrlogin.setObjectName("ntrlogin")
+        self.ntrpassword = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrpassword.setGeometry(QtCore.QRect(20, 180, 321, 31))
+        self.ntrpassword.setObjectName("ntrpassword")
+        self.ntrroomnum = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrroomnum.setGeometry(QtCore.QRect(20, 220, 321, 31))
+        self.ntrroomnum.setObjectName("ntrroomnum")
+        self.ntrphone = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrphone.setGeometry(QtCore.QRect(20, 300, 321, 31))
+        self.ntrphone.setObjectName("ntrphone")
+        self.ntrcontract = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrcontract.setGeometry(QtCore.QRect(20, 260, 321, 31))
+        self.ntrcontract.setObjectName("ntrcontract")
+        self.ntrmail = QtWidgets.QLineEdit(parent=Dialog)
+        self.ntrmail.setGeometry(QtCore.QRect(20, 340, 321, 31))
+        self.ntrmail.setObjectName("ntrmail")
+        self.adduser = QtWidgets.QPushButton(parent=Dialog)
+        self.adduser.setGeometry(QtCore.QRect(20, 390, 321, 31))
+        self.adduser.setObjectName("adduser")
+
+        self.retranslateUi(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.ntrfirst.setPlaceholderText(_translate("Dialog", "Введите Имя"))
+        self.ntrlast.setPlaceholderText(_translate("Dialog", "Введите Фамилию"))
+        self.ntrthird.setPlaceholderText(_translate("Dialog", "Введите Отчество"))
+        self.ntrlogin.setPlaceholderText(_translate("Dialog", "Введите Логин"))
+        self.ntrpassword.setPlaceholderText(_translate("Dialog", "Введите Пароль"))
+        self.ntrroomnum.setPlaceholderText(_translate("Dialog", "Введите номер комнаты"))
+        self.ntrphone.setPlaceholderText(_translate("Dialog", "Введите телефон"))
+        self.ntrcontract.setPlaceholderText(_translate("Dialog", "Введите номер контракта"))
+        self.ntrmail.setPlaceholderText(_translate("Dialog", "Введите почту"))
+        self.adduser.setText(_translate("Dialog", "Добавить"))

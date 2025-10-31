@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>640</width>
     <height>600</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -26,76 +26,60 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QPushButton" name="openWindowBtn">
+         <widget class="QPushButton" name="changedata">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="text">
-           <string>Открыть новое окно</string>
+           <string>Изменить данные проживающего</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>16</width>
+            <height>16</height>
+           </size>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="formLayout">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>ID:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="idEdit"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Элемент:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="elementEdit"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Значение:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="valueEdit"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="submitBtn">
+         <widget class="QPushButton" name="changesumma">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="text">
-           <string>Отправить данные</string>
+           <string>Изменить счет проживающего</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="extraBtn">
+         <widget class="QPushButton" name="addpost">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
           <property name="text">
-           <string>Дополнительная кнопка</string>
+           <string>Добавить пост</string>
           </property>
          </widget>
         </item>
         <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -113,7 +97,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QListWidget" name="usersList"/>
+         <widget class="QTableView" name="tableView"/>
         </item>
         <item>
          <widget class="QPushButton" name="addUserBtn">
@@ -126,7 +110,7 @@
       </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
-        <string>Записи</string>
+        <string>Заявления</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
@@ -136,7 +120,7 @@
       </widget>
       <widget class="QWidget" name="tab_4">
        <attribute name="title">
-        <string>Заметки</string>
+        <string>Новости</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>

@@ -24,18 +24,18 @@ class Login(Ui_MainWindow):
 
         if not login or not password:
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, заполните все поля")
-
-        c.execute(f'''SELECT id_user FROM user 
-            WHERE user_login = ? AND user_password = ? ''', (login, password))
-
-        result = c.fetchone()
-
-        if result:
-            self.current_user_id = result[0]
-            self.open_home_page(self.current_user_id)
-
         else:
-            QMessageBox.warning(self, "Ошибка", "Проверьте данные")
+            c.execute(f'''SELECT id_user FROM user 
+                WHERE user_login = ? AND user_password = ? ''', (login, password))
+
+            result = c.fetchone()
+
+            if result:
+                self.current_user_id = result[0]
+                self.open_home_page(self.current_user_id)
+
+            else:
+                QMessageBox.warning(self, "Ошибка", "Проверьте данные")
 
 
 if __name__ == "__main__":
