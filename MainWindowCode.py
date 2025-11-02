@@ -9,6 +9,7 @@ import sys
 import sqlite3
 
 
+
 class TextItemWidget(QWidget):
     def __init__(self,text):
         super().__init__()
@@ -40,14 +41,16 @@ class MainUserWindow(MainWindow):
         self.button_add_doc.clicked.connect(self.on_add_app_clicked)
 
     def upd_applications(self):
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
         while self.scroll_layout_app.count():
             current = self.scroll_layout_app.takeAt(0)
             if current.widget():
                 current.widget().deleteLater()
 
-        self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',
+        c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',
                        (self.user_id,))
-        applications = self.c.fetchall()
+        applications = c.fetchall()
 
         for id, title, date_app in applications:
             app = f"{id} {title} {date_app}"
@@ -62,22 +65,24 @@ class MainUserWindow(MainWindow):
             label_app.mousePressEvent = lambda e, app_id=id: self.open_application(e, app_id)
             self.scroll_layout_app.addWidget(label_app)
         self.scroll_layout_app.addStretch()
-
+        conn.close()
     def on_add_app_clicked(self):
         self.appwindow = applicationCode.Application(self.user_id,self)
         self.appwindow.show()
 
     def open_application(self,event,app_id):
-        if isinstance(event, QMouseEvent):
-            self.app_text_window = app_win_text_code.win_text(app_id)
-            self.app_text_window.show()
-
+        try:
+            if isinstance(event, QMouseEvent):
+                self.app_text_window = app_win_text_code.win_text(app_id)
+                self.app_text_window.show()
+        except Exception as e:
+            print(e)
     def get_user_data(self):
-        self.conn = sqlite3.connect('hotel.db')
-        self.c = self.conn.cursor()
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
 
-        self.c.execute("SELECT firstname,lastname,patronymic,room_num,contract,phone,mail,user_login FROM user WHERE id_user = ?",(self.user_id,))
-        result = self.c.fetchone()
+        c.execute("SELECT firstname,lastname,patronymic,room_num,contract,phone,mail,user_login FROM user WHERE id_user = ?",(self.user_id,))
+        result = c.fetchone()
 
         self.firstname = result[0]
         self.lastname = result[1]
@@ -97,8 +102,8 @@ class MainUserWindow(MainWindow):
         self.user_room.setText(f"Номер комнаты: {self.room_num}")
 
 
-        self.c.execute('''SELECT lastname,firstname,patronymic FROM user WHERE room_num = ? and id_user != ?''', (self.room_num,self.user_id,))
-        neighbours = self.c.fetchall()
+        c.execute('''SELECT lastname,firstname,patronymic FROM user WHERE room_num = ? and id_user != ?''', (self.room_num,self.user_id,))
+        neighbours = c.fetchall()
 
         for last_name, first_name, middle_name in neighbours:
             full_name = f"{last_name} {first_name} {middle_name or ''}"
@@ -111,9 +116,9 @@ class MainUserWindow(MainWindow):
         self.scroll_layout_2.addStretch()
 
 
-        self.c.execute(
+        c.execute(
             "SELECT user_balance,month_price FROM finance WHERE contract = ?",(self.contract,))
-        result = self.c.fetchone()
+        result = c.fetchone()
 
         self.balance = result[0]
         self.month_price = result[1]
@@ -121,8 +126,8 @@ class MainUserWindow(MainWindow):
         self.user_credit.setText(f"{self.balance}")
         self.price_per_month.setText(f"{self.month_price}")
 
-        self.c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',(self.user_id,))
-        applications = self.c.fetchall()
+        c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',(self.user_id,))
+        applications = c.fetchall()
 
         for id,title,date_app in applications:
             app = f"{id} {title} {date_app}"
@@ -137,12 +142,12 @@ class MainUserWindow(MainWindow):
             label_app.mousePressEvent = lambda e, app_id=id:self.open_application(e,app_id)
             self.scroll_layout_app.addWidget(label_app)
         self.scroll_layout_app.addStretch()
-
+        conn.close()
     def fill_posts(self):
-        self.conn = sqlite3.connect('hotel.db')
-        self.c = self.conn.cursor()
-        self.c.execute('''SELECT post_title, post_date FROM post ORDER BY id_post DESC''')
-        posts = self.c.fetchall()
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
+        c.execute('''SELECT post_title, post_date FROM post ORDER BY id_post DESC''')
+        posts = c.fetchall()
 
         for post_title, post_date in posts:
             text = f"{post_title}\n\n{post_date}"
@@ -152,7 +157,7 @@ class MainUserWindow(MainWindow):
 
             self.list_post.addItem(item)
             self.list_post.setItemWidget(item, widget)
-        self.conn.close()
+        conn.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

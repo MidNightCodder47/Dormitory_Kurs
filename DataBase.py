@@ -30,6 +30,7 @@ c.execute('''
         contract varchar(20) unique,
         month_price integer default 0 not null,
         FOREIGN KEY (contract) REFERENCES user (contract))''')
+conn.commit()
 
 c.execute('''
     Create TABLE IF NOT EXISTS application (
@@ -39,6 +40,7 @@ c.execute('''
         user_id INTEGER NOT NULL,
         app_date Varchar(20) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES user (id_user))''')
+conn.commit()
 try:
 	c.execute('''
 		CREATE TABLE IF NOT EXISTS post(

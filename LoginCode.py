@@ -2,6 +2,7 @@ import sys
 import sqlite3
 from PyQt6.QtWidgets import QApplication, QMessageBox
 import MainWindowCode
+import adminCode
 from LoginUI import Ui_MainWindow
 
 conn = sqlite3.connect('hotel.db')
@@ -24,6 +25,10 @@ class Login(Ui_MainWindow):
 
         if not login or not password:
             QMessageBox.warning(self, "Ошибка", "Пожалуйста, заполните все поля")
+        if login == "admin" or password == "adm123":
+            self.admin_window = adminCode.Admin()
+            self.admin_window.show()
+            self.close()
         else:
             c.execute(f'''SELECT id_user FROM user 
                 WHERE user_login = ? AND user_password = ? ''', (login, password))
