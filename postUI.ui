@@ -41,7 +41,7 @@ background-color:  rgb(229, 229, 229)</string>
     <string>Отправить</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="text_input">
+  <widget class="QTextEdit" name="post_text">
    <property name="geometry">
     <rect>
      <x>30</x>

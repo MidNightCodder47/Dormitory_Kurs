@@ -6,8 +6,8 @@ c = conn.cursor()
 c.execute('DROP TABLE IF EXISTS user')
 c.execute('DROP TABLE IF EXISTS finance')
 # c.execute('DROP TABLE IF EXISTS application')
-c.execute('DROP TABLE IF EXISTS post')
-#Для тестов После удалить
+# c.execute('DROP TABLE IF EXISTS post')
+# c.execute('Drop table if exists operations')
 c.execute('PRAGMA foreign_keys = ON')
 
 c.execute('''
@@ -41,31 +41,53 @@ c.execute('''
         app_date Varchar(20) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES user (id_user))''')
 conn.commit()
-try:
-	c.execute('''
-		CREATE TABLE IF NOT EXISTS post(
-			id_post integer PRIMARY KEY AUTOINCREMENT,
-			post_title text NOT NULL,
-			post_date varchar(50) NOT NULL)''')
-except Exception as e:
-	print(e)
+
+c.execute('''
+	CREATE TABLE IF NOT EXISTS post(
+		id_post integer PRIMARY KEY AUTOINCREMENT,
+		post_title text NOT NULL,
+		post_date varchar(50) NOT NULL)''')
+
 conn.commit()
+try:
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS operations(
+            id_oper integer PRIMARY KEY AUTOINCREMENT,
+            user_id integer not null,
+            summa decimal(8,2) NOT NULL,
+            oper_date DATE NOT NULL,
+            oper_text varchar(100),
+            FOREIGN KEY (user_id) references user (id_user))''')
+
+    conn.commit()
+except Exception as e:
+    print(e)
 
 
-c.execute('''INSERT INTO user (lastname, firstname,patronymic,user_login, user_password,room_num,contract,mail) 
+c.execute('''INSERT INTO user (lastname, firstname,patronymic,user_login, user_password,room_num,contract,mail)
           VALUES ('Ivanov', 'Petr','Olegovich','123', '123', '101A','AB001','example@mail.com'),
                 ('Ptichkin', 'Vanya','','1234', '1234', '101A','AB002','example2@mail.com')''')
 
 
-c.execute('''Insert Into finance (contract,user_balance)
-            Values ('AB001',100),
-                     ('AB002',200)''')
+try:
+    c.execute('''Insert Into finance (contract,month_price)
+                Values ('AB001',50),
+                         ('AB002',100)''')
+except Exception as e:
+    print(e)
 c.execute('''INSERT INTO post (post_title, post_date)
 			Values ('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01'),
-					('C днем знаний!','2025-09-01')''')
+					('C днем знаний!','2025-09-01'),
+					('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01')
+					''')
 conn.commit()
+c.execute('''Insert into operations (user_id,summa,oper_date,oper_text)
+            Values (1,150.49,'2025-11-4','Пополнение')''')
 
-
+conn.commit()
+c.execute('''INSERT INTO application (app_title,app_text,app_date,user_id)
+                VALUES ('123','456','2025-10-6',1)''')
+conn.commit()
 print("Data inserted successfully.")
 
 

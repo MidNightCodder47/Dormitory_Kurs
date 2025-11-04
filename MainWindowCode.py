@@ -1,10 +1,11 @@
 from PyQt6.QtGui import QFont, QMouseEvent
-from PyQt6.QtWidgets import QDialog, QApplication, QLabel, QWidget, QVBoxLayout, QListWidget, QListWidgetItem
-from PyQt6 import QtGui, QtCore
+from PyQt6.QtWidgets import QDialog, QApplication, QLabel, QWidget, QVBoxLayout, QListWidget, QListWidgetItem, \
+    QMainWindow
+from PyQt6 import QtGui, QtCore,uic
 
 import app_win_text_code
 import applicationCode
-from MainWindowV2 import MainWindow
+
 import sys
 import sqlite3
 
@@ -23,52 +24,59 @@ class TextItemWidget(QWidget):
         font.setPointSize(13)
         self.label.setFont(font)
         self.label.setWordWrap(True)
+        self.label.setContentsMargins(10,5,10,5)
 
         layout.addWidget(self.label)
         self.setLayout(layout)
 
 
-class MainUserWindow(MainWindow):
+class MainUserWindow(QDialog):
     def __init__(self,user_id):
         super().__init__()
+
+        uic.loadUi('MainWindowV2.ui',self)
         self.user_id = user_id
         self.list_post = QListWidget()
 
         self.fill_posts()
-        self.scroll_layout_4.addWidget(self.list_post)
-        self.scroll_layout_4.addStretch()
         self.get_user_data()
+        self.load_operations()
         self.button_add_doc.clicked.connect(self.on_add_app_clicked)
+        self.appList.itemClicked.connect(self.on_app_clicked)
 
     def upd_applications(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
-        while self.scroll_layout_app.count():
-            current = self.scroll_layout_app.takeAt(0)
-            if current.widget():
-                current.widget().deleteLater()
+        self.appList.clear()
 
         c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',
                        (self.user_id,))
         applications = c.fetchall()
 
         for id, title, date_app in applications:
-            app = f"{id} {title} {date_app}"
-            label_app = QLabel(app)
+            app_text = f"{id} {title} {date_app}"
+            app = QListWidgetItem(app_text)
+
             font = QtGui.QFont()
             font.setFamily("Bahnschrift")
             font.setPointSize(13)
-            label_app.setFont(font)
-            label_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
-            label_app.setWordWrap(True)
 
-            label_app.mousePressEvent = lambda e, app_id=id: self.open_application(e, app_id)
-            self.scroll_layout_app.addWidget(label_app)
-        self.scroll_layout_app.addStretch()
+            app.setFont(font)
+
+            self.appList.addItem(app)
         conn.close()
+
     def on_add_app_clicked(self):
         self.appwindow = applicationCode.Application(self.user_id,self)
         self.appwindow.show()
+
+    def on_app_clicked(self,item):
+        try:
+            app_id = int(item.text().split()[0])
+            self.app_text_window = app_win_text_code.win_text(app_id)
+            self.app_text_window.show()
+        except Exception as e:
+            print(e)
 
     def open_application(self,event,app_id):
         try:
@@ -76,12 +84,13 @@ class MainUserWindow(MainWindow):
                 self.app_text_window = app_win_text_code.win_text(app_id)
                 self.app_text_window.show()
         except Exception as e:
+            print("error in open_application")
             print(e)
     def get_user_data(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
 
-        c.execute("SELECT firstname,lastname,patronymic,room_num,contract,phone,mail,user_login FROM user WHERE id_user = ?",(self.user_id,))
+        c.execute("SELECT firstname, lastname, patronymic, room_num, contract, phone, mail, user_login FROM user WHERE id_user = ?",(self.user_id,))
         result = c.fetchone()
 
         self.firstname = result[0]
@@ -107,42 +116,68 @@ class MainUserWindow(MainWindow):
 
         for last_name, first_name, middle_name in neighbours:
             full_name = f"{last_name} {first_name} {middle_name or ''}"
-            label = QLabel(full_name)
+
+            label = QListWidgetItem(full_name)
             font = QtGui.QFont()
             font.setFamily("Bahnschrift")
             font.setPointSize(13)
             label.setFont(font)
-            self.scroll_layout_2.addWidget(label)
-        self.scroll_layout_2.addStretch()
+
+            self.neighboursList.addItem(label)
+
 
 
         c.execute(
             "SELECT user_balance,month_price FROM finance WHERE contract = ?",(self.contract,))
         result = c.fetchone()
-
-        self.balance = result[0]
-        self.month_price = result[1]
+        if not result:
+            print("Ошибка подгрузки баланса и стоимости")
+            self.balance = "Error"
+            self.month_price = "Error"
+        else:
+            self.balance = result[0]
+            self.month_price = result[1]
 
         self.user_credit.setText(f"{self.balance}")
         self.price_per_month.setText(f"{self.month_price}")
+
+        self.appList.clear()
 
         c.execute('''SELECT id_application,app_title,app_date FROM application WHERE user_id = ?''',(self.user_id,))
         applications = c.fetchall()
 
         for id,title,date_app in applications:
-            app = f"{id} {title} {date_app}"
-            label_app = QLabel(app)
+            app_text = f"{id} {title} {date_app}"
+            app = QListWidgetItem(app_text)
+
             font = QtGui.QFont()
             font.setFamily("Bahnschrift")
             font.setPointSize(13)
-            label_app.setFont(font)
-            label_app.setAlignment(QtCore.Qt.AlignmentFlag.AlignJustify)
-            label_app.setWordWrap(True)
 
-            label_app.mousePressEvent = lambda e, app_id=id:self.open_application(e,app_id)
-            self.scroll_layout_app.addWidget(label_app)
-        self.scroll_layout_app.addStretch()
+            app.setFont(font)
+
+            self.appList.addItem(app)
+
         conn.close()
+    def load_operations(self):
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
+
+        c.execute('''SELECT summa,oper_text,oper_date FROM operations WHERE user_id =?''',(self.user_id,))
+        operations = c.fetchall()
+        for summa,oper_text,oper_date in operations:
+            app_text = f"{summa} {oper_text} {oper_date}"
+            app = QListWidgetItem(app_text)
+
+            font = QtGui.QFont()
+            font.setFamily("Bahnschrift")
+            font.setPointSize(13)
+
+            app.setFont(font)
+
+            self.operationsList.addItem(app)
+        conn.close()
+
     def fill_posts(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
@@ -155,13 +190,13 @@ class MainUserWindow(MainWindow):
             item = QListWidgetItem()
             item.setSizeHint(widget.sizeHint())
 
-            self.list_post.addItem(item)
-            self.list_post.setItemWidget(item, widget)
+            self.postList.addItem(item)
+            self.postList.setItemWidget(item, widget)
         conn.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainUserWindow(2)
+    window = MainUserWindow(1)
     window.setWindowTitle("Home page")
     window.show()
     sys.exit(app.exec())

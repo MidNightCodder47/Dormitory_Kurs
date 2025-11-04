@@ -66,7 +66,7 @@ color:rgb(0, 0, 0)</string>
     <property name="font">
      <font>
       <family>Bahnschrift</family>
-      <pointsize>28</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="text">
@@ -127,14 +127,14 @@ color:rgb(0, 0, 0)</string>
     <property name="font">
      <font>
       <family>Bahnschrift</family>
-      <pointsize>28</pointsize>
+      <pointsize>15</pointsize>
      </font>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="alignment">
-     <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
+     <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
     </property>
     <property name="wordWrap">
      <bool>true</bool>

@@ -1,16 +1,18 @@
 import sys
 import sqlite3
-from PyQt6.QtWidgets import QApplication, QMessageBox
+from PyQt6.QtWidgets import QApplication, QMessageBox, QMainWindow
+from PyQt6 import uic
 import MainWindowCode
 import adminCode
-from LoginUI import Ui_MainWindow
+
 
 conn = sqlite3.connect('hotel.db')
 c = conn.cursor()
 
-class Login(Ui_MainWindow):
+class Login(QMainWindow):
     def __init__(self):
         super().__init__()
+        uic.loadUi('Login.ui',self)
         self.current_id = None
         self.logIn_btn.clicked.connect(self.on_login_clicked)
 

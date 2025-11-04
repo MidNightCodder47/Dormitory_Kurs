@@ -30,7 +30,7 @@
 background-color: rgb(240, 240, 240);</string>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>1</number>
    </property>
    <property name="tabBarAutoHide">
     <bool>false</bool>
@@ -176,28 +176,15 @@ background-color:  rgb(229, 229, 229)</string>
        <string>Соседи:</string>
       </property>
      </widget>
-     <widget class="QScrollArea" name="scrollArea_2">
+     <widget class="QListWidget" name="neighboursList">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>120</y>
-        <width>251</width>
-        <height>251</height>
+        <y>110</y>
+        <width>256</width>
+        <height>281</height>
        </rect>
       </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_2">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>251</width>
-         <height>251</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
     </widget>
     <widget class="QFrame" name="frame_3">
@@ -312,7 +299,7 @@ background-color:  rgb(229, 229, 229)</string>
        <string>Логин:</string>
       </property>
      </widget>
-     <widget class="QLabel" name="user_id">
+     <widget class="QLabel" name="user_ident">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -434,7 +421,7 @@ background-color:  rgb(229, 229, 229)</string>
      <widget class="QLabel" name="price_per_month">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>90</x>
         <y>50</y>
         <width>91</width>
         <height>31</height>
@@ -491,10 +478,10 @@ border-radius: 15;</string>
      <widget class="QLabel" name="payment_data">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>70</y>
-        <width>241</width>
-        <height>31</height>
+        <x>10</x>
+        <y>40</y>
+        <width>261</width>
+        <height>111</height>
        </rect>
       </property>
       <property name="font">
@@ -504,7 +491,10 @@ border-radius: 15;</string>
        </font>
       </property>
       <property name="text">
-       <string>data</string>
+       <string>35478524</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
       </property>
      </widget>
     </widget>
@@ -545,28 +535,15 @@ background-color:  rgb(229, 229, 229)</string>
        <string>История операций</string>
       </property>
      </widget>
-     <widget class="QScrollArea" name="scrollArea_3">
+     <widget class="QListWidget" name="operationsList">
       <property name="geometry">
        <rect>
-        <x>9</x>
-        <y>49</y>
-        <width>321</width>
+        <x>15</x>
+        <y>51</y>
+        <width>311</width>
         <height>351</height>
        </rect>
       </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_3">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>321</width>
-         <height>351</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
     </widget>
    </widget>
@@ -614,35 +591,6 @@ background-color:  rgb(229, 229, 229)</string>
      <property name="frameShape">
       <enum>QFrame::Shape::NoFrame</enum>
      </property>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>641</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LayoutDirection::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: transparent;</string>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>641</width>
-         <height>301</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
@@ -662,6 +610,16 @@ background-color:  rgb(229, 229, 229)</string>
       </property>
       <property name="text">
        <string>Заявления</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="appList">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>41</y>
+        <width>631</width>
+        <height>291</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -686,34 +644,15 @@ background-color:  rgb(229, 229, 229)</string>
      <property name="frameShape">
       <enum>QFrame::Shape::NoFrame</enum>
      </property>
-     <widget class="QScrollArea" name="scrollArea_4">
+     <widget class="QListWidget" name="postList">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>651</width>
+        <x>15</x>
+        <y>21</y>
+        <width>641</width>
         <height>411</height>
        </rect>
       </property>
-      <property name="layoutDirection">
-       <enum>Qt::LayoutDirection::LeftToRight</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: transparent;</string>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_4">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>651</width>
-         <height>411</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
     </widget>
    </widget>

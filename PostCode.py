@@ -1,19 +1,32 @@
 import sqlite3
+from datetime import date
 
 import PyQt6
 from PyQt6 import uic
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QDialog
 
 
-class postcode(QMainWindow):
-    def __init__(self):
+class postcode(QDialog):
+    def __init__(self,mainwin=None):
         super().__init__()
         uic.loadUi('postUI.ui', self)
-        self.button_send.clicked.connect(self.clicked())
+        self.main_window = mainwin
+        self.button_send.clicked.connect(self.clicked)
     def clicked(self):
-        text = self.text_input.text()
-        conn = sqlite3.connect('hotel.db')
-        c = conn.cursor()
+        try:
+            text = self.post_text.toPlainText()
+            if not text:
+                print("Текст поста пустой")
+                return
+            conn = sqlite3.connect('hotel.db')
+            c = conn.cursor()
 
-        c.execute('''insert into post''')
-
+            c.execute('''insert into post (post_title,post_date)
+                        VALUES (?,?)''',(text,str(date.today())))
+            conn.commit()
+            conn.close()
+            self.main_window.fill_posts()
+            self.close()
+        except Exception as e:
+            print("Post code / clicked")
+            print(e)
