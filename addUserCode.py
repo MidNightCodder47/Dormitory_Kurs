@@ -5,10 +5,13 @@ from  PyQt6 import uic
 
 
 class addUserCode(QDialog):
-    def __init__(self):
+    def __init__(self,mainwin=None):
         super().__init__()
+        self.main_window = mainwin
         uic.loadUi('adduserwin.ui', self)
+        self.setWindowTitle("Добавление пользователя")
         self.adduser.clicked.connect(self.on_add_clicked)
+
     def on_add_clicked(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
@@ -22,10 +25,11 @@ class addUserCode(QDialog):
             contract = self.ntrcontract.text()
             phone = self.ntrphone.text()
             mail = self.ntrmail.text()
+            mprice = self.ntrmonthprice.text()
 
 
             count = 0
-            for i in (lastname, firstname, patr,login, password, roomnum, contract, phone, mail):
+            for i in (lastname, firstname, patr,login, password, roomnum, contract, phone, mail, mprice):
                 if not i:
                     count += 1
             if count>=1:
@@ -33,10 +37,13 @@ class addUserCode(QDialog):
             else:
                 c.execute(f'''Insert into user(lastname, firstname,patronymic,user_login, user_password,room_num,contract,phone,mail)
                             Values (?,?,?,?,?,?,?,?,?)''', (lastname, firstname, patr,login, password, roomnum, contract, phone, mail))
+                c.execute('''INSERT INTO finance(contract,month_price) values(?,?)''',(contract,mprice))
                 conn.commit()
                 conn.close()
+                self.main_window.user_upd()
                 self.close()
         except Exception as e:
+            print("AddUserCode")
             print(e)
 
 if __name__ == "__main__":

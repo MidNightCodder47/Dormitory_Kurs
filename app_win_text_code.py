@@ -12,6 +12,7 @@ class win_text(QDialog):
     def __init__(self,app_id):
         super().__init__()
         uic.loadUi('app_window.ui',self)
+        self.setWindowTitle("Заявление")
         self.app_id = app_id
         self.load_data(app_id)
 

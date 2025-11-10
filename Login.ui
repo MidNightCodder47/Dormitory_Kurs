@@ -156,6 +156,9 @@ background-color:  rgb(225, 225, 225)</string>
      <property name="text">
       <string/>
      </property>
+     <property name="echoMode">
+      <enum>QLineEdit::EchoMode::Password</enum>
+     </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -186,6 +189,39 @@ color:rgb(0, 0, 0)</string>
      </property>
      <property name="text">
       <string>Войти</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>131</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bahnschrift</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QCheckBox::indicator {
+    border: 1px solid black;
+	border-radius: 3px;
+}
+QCheckBox {
+	color:black;
+}
+QCheckBox::indicator:checked {
+    background-color: rgb(48, 48, 48);
+    border: 2px solid black;
+    text: &quot;+&quot;;
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Показать пароль</string>
      </property>
     </widget>
    </widget>

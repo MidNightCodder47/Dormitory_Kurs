@@ -12,6 +12,7 @@ class Application(QDialog):
     def __init__(self,user_id,mainwin=None):
         super().__init__()
         uic.loadUi('applicationWin.ui',self)
+        self.setWindowTitle("Новое заявление")
         self.main_window = mainwin
         self.user_id = user_id
 

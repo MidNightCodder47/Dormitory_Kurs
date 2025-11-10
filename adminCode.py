@@ -7,8 +7,9 @@ from pathlib import Path
 
 from PyQt6 import QtGui
 
-import app_win_text_code,addUserCode,PostCode,chngSummCode
-
+import app_win_text_code,addUserCode,PostCode
+import chngsumCode
+import operationCode
 
 
 class TextItemWidget(QWidget):
@@ -32,28 +33,44 @@ class TextItemWidget(QWidget):
 class Admin(QMainWindow):
     def __init__(self):
         super().__init__()
-        # self.ui = Ui_AdminWindow()
-        uic.loadUi('adminwindow.ui', self)
-        self.tableWidget.setEditTriggers(QTableWidget.EditTrigger.DoubleClicked)
-
         try:
+            uic.loadUi('adminwindow.ui', self)
+            self.setWindowTitle("Панель администратора")
+            self.tableWidget.setEditTriggers(QTableWidget.EditTrigger.DoubleClicked)
+            self.setup_window()
             self.load_data()
             self.addUserBtn.clicked.connect(self.on_addusr_clicked)
             self.appList.itemClicked.connect(self.on_app_clicked)
             self.addpost.clicked.connect(self.on_add_post_clicked)
             self.changesumma.clicked.connect(self.chng_sum_clicked)
+            self.add_operation.clicked.connect(self.add_oper_clicked)
             self.fill_posts()
         except Exception as e:
-            print("админ инит")
+            print("Admin initialization \ adminCode")
             print(e)
+
+    def setup_window(self):
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+        self.setGeometry(screen_geometry)
+        self.setFixedSize(self.size())
+        self.center_window()
+
+    def center_window(self):
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+        window_geometry = self.frameGeometry()
+        center_point = screen_geometry.center()
+        window_geometry.moveCenter(center_point)
+        self.move(window_geometry.topLeft())
     def load_data(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
 
-        self.tableWidget.setColumnCount(10)
-        self.tableWidget.setHorizontalHeaderLabels(["id","Фамилия","Имя","Отчество","Логин","Пароль", "Комната", "Контракт","Телефон","Почта"])
+        self.tableWidget.setColumnCount(8)
+        self.tableWidget.setHorizontalHeaderLabels(["id","Фамилия","Имя","Отчество", "Комната", "Договор","Телефон","Почта"])
 
-        c.execute('SELECT * FROM user')
+        c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
         rows = c.fetchall()
 
         self.tableWidget.setRowCount(len(rows))
@@ -76,9 +93,27 @@ class Admin(QMainWindow):
             app = QListWidgetItem(app_text)
 
             self.appList.addItem(app)
+        conn.commit()
+        conn.close()
+    def user_upd(self):
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
+        c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
+        rows = c.fetchall()
+        self.tableWidget.cellChanged.disconnect(self.on_cell_changed)
+        self.tableWidget.clear()
+
+        self.tableWidget.setColumnCount(8)
+        self.tableWidget.setHorizontalHeaderLabels(
+            ["id", "Фамилия", "Имя", "Отчество", "Комната", "Договор", "Телефон", "Почта"])
+
+        self.tableWidget.setRowCount(len(rows))
+        for row_num, row in enumerate(rows):
+            for col_num, value in enumerate(row):
+                self.tableWidget.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+        self.tableWidget.cellChanged.connect(self.on_cell_changed)
 
         conn.close()
-
     def on_cell_changed(self, row, column):
         try:
             if column == 0:  # Не позволяем редактировать ID
@@ -87,8 +122,7 @@ class Admin(QMainWindow):
             user_id = self.tableWidget.item(row, 0).text()
             new_value = self.tableWidget.item(row, column).text()
 
-            field_names = ["", "lastname", "firstname", "patronymic", "login",
-                           "password", "room_number", "email", "phone", "contract"]
+            field_names = ["", "lastname", "firstname", "patronymic", "room_num","contract",  "phone","email",]
 
             if 1 <= column < len(field_names):
                 field_name = field_names[column]
@@ -121,11 +155,17 @@ class Admin(QMainWindow):
         except Exception as e:
             print(e)
     def on_addusr_clicked(self):
-        self.addUser_window = addUserCode.addUserCode()
+        self.addUser_window = addUserCode.addUserCode(self)
         self.addUser_window.show()
     def chng_sum_clicked(self):
-        self.chng_sum_win = chngSummCode.chngsumma()
+        self.chng_sum_win = chngsumCode.chngsumma()
         self.chng_sum_win.show()
+    def add_oper_clicked(self):
+        try:
+            self.operation_win = operationCode.addoperation()
+            self.operation_win.show()
+        except Exception as e:
+            print(e)
     def on_add_post_clicked(self):
         try:
             self.addPost_window = PostCode.postcode(self)
