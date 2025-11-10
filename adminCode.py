@@ -1,8 +1,10 @@
 import sys
 import sqlite3
 from PyQt6 import uic
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QListWidgetItem, QWidget, QVBoxLayout, QLabel, \
-    QTableWidget
+    QTableWidget, QHeaderView, QMenu, QMessageBox
 from pathlib import Path
 
 from PyQt6 import QtGui
@@ -36,7 +38,9 @@ class Admin(QMainWindow):
         try:
             uic.loadUi('adminwindow.ui', self)
             self.setWindowTitle("Панель администратора")
+
             self.tableWidget.setEditTriggers(QTableWidget.EditTrigger.DoubleClicked)
+
             self.setup_window()
             self.load_data()
             self.addUserBtn.clicked.connect(self.on_addusr_clicked)
@@ -46,7 +50,7 @@ class Admin(QMainWindow):
             self.add_operation.clicked.connect(self.add_oper_clicked)
             self.fill_posts()
         except Exception as e:
-            print("Admin initialization \ adminCode")
+            print("Admin initialization / adminCode")
             print(e)
 
     def setup_window(self):
@@ -63,11 +67,68 @@ class Admin(QMainWindow):
         center_point = screen_geometry.center()
         window_geometry.moveCenter(center_point)
         self.move(window_geometry.topLeft())
+
+    def show_context_menu(self, position):
+        try:
+            row = self.tableWidget.rowAt(position.y())
+            if row == -1:
+                return
+
+            menu = QMenu(self)
+
+            delete_action = QAction("Удалить пользователя", self)
+            delete_action.triggered.connect(lambda: self.delete_user(row))
+
+            menu.addAction(delete_action)
+
+            menu.exec(self.tableWidget.viewport().mapToGlobal(position))
+        except Exception as e:
+            print(e)
+    def delete_user(self, row):
+        try:
+            lastname = self.tableWidget.item(row, 1).text()
+            firstname = self.tableWidget.item(row, 2).text()
+            patronymic = self.tableWidget.item(row, 3).text()
+            user_id = self.tableWidget.item(row, 0).text()
+
+            fio = f"{lastname} {firstname} {patronymic}"
+
+            reply = QMessageBox.question(
+                self,
+                "Подтверждение удаления",
+                f"Вы уверены, что хотите удалить пользователя:\n\n"
+                f"ФИО: {fio}",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No
+            )
+
+            if reply == QMessageBox.StandardButton.Yes:
+                self.delete_user_from_db(user_id)
+                self.tableWidget.removeRow(row)
+                QMessageBox.information(self, "Успех", "Пользователь удален")
+        except Exception as e:
+            print(f"Error in delete_user: {e}")
+            QMessageBox.critical(self, "Ошибка", "Не удалось удалить пользователя")
+
+    def delete_user_from_db(self, user_id):
+        try:
+            conn = sqlite3.connect('hotel.db')
+            c = conn.cursor()
+
+            c.execute('DELETE FROM user WHERE id_user = ?', (user_id,))
+            conn.commit()
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"Error deleting user from DB: {e}")
+            return False
+
     def load_data(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
 
         self.tableWidget.setColumnCount(8)
+
         self.tableWidget.setHorizontalHeaderLabels(["id","Фамилия","Имя","Отчество", "Комната", "Договор","Телефон","Почта"])
 
         c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
@@ -79,6 +140,9 @@ class Admin(QMainWindow):
                 self.tableWidget.setItem(row_num, col_num, QTableWidgetItem(str(value)))
 
         self.tableWidget.cellChanged.connect(self.on_cell_changed)
+
+        self.tableWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.tableWidget.customContextMenuRequested.connect(self.show_context_menu)
 
 
         self.appList.clear()

@@ -78,7 +78,6 @@ class MainUserWindow(QDialog):
         self.login = result[7]
 
         self.user_name.setText(f"{self.lastname} {self.firstname} {self.patronymic}")
-        self.user_ident.setText(f"ID: {self.user_id}")
         self.user_mail.setText(f"Почта: {self.mail}")
         self.user_phone.setText(f"Телефон: {self.phone}")
         self.user_contract.setText(f"Договор: №{self.contract}")

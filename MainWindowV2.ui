@@ -40,7 +40,7 @@
 background-color: rgb(240, 240, 240);</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="tabBarAutoHide">
       <bool>false</bool>
@@ -151,87 +151,102 @@ background-color:  rgb(229, 229, 229)</string>
             <property name="frameShape">
              <enum>QFrame::Shape::NoFrame</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item>
-              <widget class="QLabel" name="label_16">
-               <property name="font">
-                <font>
-                 <family>Bahnschrift</family>
-                 <pointsize>18</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Данные</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="user_ident">
-               <property name="font">
-                <font>
-                 <family>Bahnschrift</family>
-                 <pointsize>18</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>ID: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="user_mail">
-               <property name="font">
-                <font>
-                 <family>Bahnschrift</family>
-                 <pointsize>18</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Почта: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="user_phone">
-               <property name="font">
-                <font>
-                 <family>Bahnschrift</family>
-                 <pointsize>18</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Телефон:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="user_contract">
-               <property name="font">
-                <font>
-                 <family>Bahnschrift</family>
-                 <pointsize>18</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Договор:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="user_login">
-               <property name="font">
-                <font>
-                 <family>Bahnschrift</family>
-                 <pointsize>18</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Логин:</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QLabel" name="label_16">
+             <property name="geometry">
+              <rect>
+               <x>9</x>
+               <y>9</y>
+               <width>88</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Bahnschrift</family>
+               <pointsize>18</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Данные</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="user_mail">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>50</y>
+               <width>311</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Bahnschrift</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Почта: </string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="user_phone">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>100</y>
+               <width>311</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Bahnschrift</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Телефон:</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="user_contract">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>150</y>
+               <width>311</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Bahnschrift</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Договор:</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="user_login">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>200</y>
+               <width>301</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>Bahnschrift</family>
+               <pointsize>18</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Логин:</string>
+             </property>
+            </widget>
            </widget>
           </item>
          </layout>
