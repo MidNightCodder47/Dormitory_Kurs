@@ -1,7 +1,6 @@
-from PyQt6.QtGui import QFont, QMouseEvent
-from PyQt6.QtWidgets import QDialog, QApplication, QLabel, QWidget, QVBoxLayout, QListWidget, QListWidgetItem, \
-    QMainWindow
-from PyQt6 import QtGui, QtCore,uic
+from PyQt6.QtGui import  QMouseEvent
+from PyQt6.QtWidgets import QDialog, QApplication, QLabel, QWidget, QVBoxLayout, QListWidget, QListWidgetItem
+from PyQt6 import QtGui,uic
 
 import app_win_text_code
 import applicationCode
@@ -65,7 +64,8 @@ class MainUserWindow(QDialog):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
 
-        c.execute("SELECT firstname, lastname, patronymic, room_num, contract, phone, mail, user_login FROM user WHERE id_user = ?",(self.user_id,))
+        c.execute('''SELECT firstname, lastname, patronymic, room_num, contract, phone, mail, user_login 
+                  FROM user WHERE id_user = ?''',(self.user_id,))
         result = c.fetchone()
 
         self.firstname = result[0]

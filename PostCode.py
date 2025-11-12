@@ -1,9 +1,7 @@
 import sqlite3
 from datetime import date
-
-import PyQt6
 from PyQt6 import uic
-from PyQt6.QtWidgets import QMainWindow, QDialog, QMessageBox
+from PyQt6.QtWidgets import QDialog, QMessageBox
 
 
 class postcode(QDialog):
@@ -17,7 +15,7 @@ class postcode(QDialog):
         try:
             text = self.post_text.toPlainText()
             if not text:
-                QMessageBox.warning(self, "Ошибка", "Введите все поля")
+                QMessageBox.warning(self, "Ошибка", "Заполните поле")
                 return
             conn = sqlite3.connect('hotel.db')
             c = conn.cursor()

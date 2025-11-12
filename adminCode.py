@@ -38,9 +38,7 @@ class Admin(QMainWindow):
         try:
             uic.loadUi('adminwindow.ui', self)
             self.setWindowTitle("Панель администратора")
-
             self.tableWidget.setEditTriggers(QTableWidget.EditTrigger.DoubleClicked)
-
             self.setup_window()
             self.load_data()
             self.addUserBtn.clicked.connect(self.on_addusr_clicked)
@@ -124,7 +122,7 @@ class Admin(QMainWindow):
             return False
 
     def load_data(self):
-        conn = sqlite3.connect('hotel.db')
+        conn = sqlite3.connect('systema.db')
         c = conn.cursor()
 
         self.tableWidget.setColumnCount(8)
@@ -180,7 +178,7 @@ class Admin(QMainWindow):
         conn.close()
     def on_cell_changed(self, row, column):
         try:
-            if column == 0:  # Не позволяем редактировать ID
+            if column == 0:
                 return
 
             user_id = self.tableWidget.item(row, 0).text()
@@ -205,10 +203,10 @@ class Admin(QMainWindow):
 
             conn.commit()
             conn.close()
-            print(f"Обновлен пользователь {user_id}: {field_name} = '{new_value}'")
+            QMessageBox.warning(self, "Информация", "Обновлен пользователь {user_id}: {field_name} = '{new_value}'")
 
         except Exception as e:
-            print(f"Ошибка БД при обновлении {field_name}: {e}")
+            QMessageBox.warning(self, "Ошибка", "Ошибка БД при обновлении {field_name}: {e}")
 
 
     def on_app_clicked(self,item):
