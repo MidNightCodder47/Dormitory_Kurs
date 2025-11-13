@@ -22,6 +22,7 @@ c.execute('''
         phone varchar(15) unique,
         mail varchar(40));
         ''')
+conn.commit()
 c.execute('''
     CREATE TABLE IF NOT EXISTS  finance (
         id_bill integer PRIMARY KEY AUTOINCREMENT,
@@ -30,63 +31,63 @@ c.execute('''
         month_price integer default 0 not null,
         FOREIGN KEY (contract) REFERENCES user (contract) ON DELETE CASCADE)''')
 conn.commit()
-#
-# c.execute('''
-#     Create TABLE IF NOT EXISTS application (
-#         id_application integer PRIMARY KEY AUTOINCREMENT,
-#         app_title varchar(50) NOT NULL,
-#         app_text TEXT NOT NULL,
-#         user_id INTEGER NOT NULL,
-#         app_date Varchar(20) NOT NULL,
-#         FOREIGN KEY (user_id) REFERENCES user (id_user) ON DELETE CASCADE)''')
-# conn.commit()
-#
-# c.execute('''
-# 	CREATE TABLE IF NOT EXISTS post(
-# 		id_post integer PRIMARY KEY AUTOINCREMENT,
-# 		post_title text NOT NULL,
-# 		post_date varchar(50) NOT NULL)''')
-#
-# conn.commit()
-# try:
-#     c.execute('''
-#         CREATE TABLE IF NOT EXISTS operations(
-#             id_oper integer PRIMARY KEY AUTOINCREMENT,
-#             summa decimal(8,2) NOT NULL,
-#             contract varchar(20),
-#             oper_date DATE NOT NULL,
-#             oper_text varchar(100),
-#             FOREIGN KEY (contract) REFERENCES user (contract) ON DELETE CASCADE)''')
-#
-#     conn.commit()
+
+c.execute('''
+    Create TABLE IF NOT EXISTS application (
+        id_application integer PRIMARY KEY AUTOINCREMENT,
+        app_title varchar(50) NOT NULL,
+        app_text TEXT NOT NULL,
+        user_id INTEGER NOT NULL,
+        app_date Varchar(20) NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES user (id_user) ON DELETE CASCADE)''')
+conn.commit()
+
+c.execute('''
+	CREATE TABLE IF NOT EXISTS post(
+		id_post integer PRIMARY KEY AUTOINCREMENT,
+		post_title text NOT NULL,
+		post_date varchar(50) NOT NULL)''')
+
+conn.commit()
+try:
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS operations(
+            id_oper integer PRIMARY KEY AUTOINCREMENT,
+            summa decimal(8,2) NOT NULL,
+            contract varchar(20),
+            oper_date DATE NOT NULL,
+            oper_text varchar(100),
+            FOREIGN KEY (contract) REFERENCES user (contract) ON DELETE CASCADE)''')
+
+    conn.commit()
+except Exception as e:
+    print(e)
+
+
+c.execute('''INSERT INTO user (lastname, firstname,patronymic,user_login, user_password,room_num,contract,mail)
+          VALUES ('Иванов', 'Петр','олегович','123', '123', '101A','AB001','example@mail.com'),
+                ('Птичкин', 'Иван','','1234', '1234', '101A','AB002','example2@mail.com')''')
+conn.commit()
+c.execute('''Insert Into finance (contract,month_price)
+                Values ('AB001',50),
+                         ('AB002',100)''')
+conn.commit()
 # except Exception as e:
 #     print(e)
-#
-#
-# c.execute('''INSERT INTO user (lastname, firstname,patronymic,user_login, user_password,room_num,contract,mail)
-#           VALUES ('Иванов', 'Петр','олегович','123', '123', '101A','AB001','example@mail.com'),
-#                 ('Птичкин', 'Иван','','1234', '1234', '101A','AB002','example2@mail.com')''')
-# conn.commit()
-# c.execute('''Insert Into finance (contract,month_price)
-#                 Values ('AB001',50),
-#                          ('AB002',100)''')
-# conn.commit()
-# # except Exception as e:
-# #     print(e)
-# # c.execute('''INSERT INTO post (post_title, post_date)
-# # 			Values ('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01'),
-# # 					('C днем знаний!','2025-09-01'),
-# # 					('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01')
-# # 					''')
-# # conn.commit()
-# c.execute('''Insert into operations (contract,summa,oper_date,oper_text)
-#             Values ('AB001',150.49,'2025-11-4','Пополнение')''')
-#
-# conn.commit()
-# # c.execute('''INSERT INTO application (app_title,app_text,app_date,user_id)
-# #                 VALUES ('123','456','2025-10-6',1)''')
-# # conn.commit()
-# # print("Data inserted successfully.")
-# #
-# #
-# c.close()
+c.execute('''INSERT INTO post (post_title, post_date)
+			Values ('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01'),
+					('C днем знаний!','2025-09-01'),
+					('Открытие общежития! \nРады вас приветсвовать в нашем общежити!','2025-09-01')
+					''')
+conn.commit()
+c.execute('''Insert into operations (contract,summa,oper_date,oper_text)
+            Values ('AB001',150.49,'2025-11-4','Пополнение')''')
+
+conn.commit()
+c.execute('''INSERT INTO application (app_title,app_text,app_date,user_id)
+                VALUES ('123','456','2025-10-6',1)''')
+conn.commit()
+print("Data inserted successfully.")
+
+
+c.close()

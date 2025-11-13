@@ -122,7 +122,7 @@ class Admin(QMainWindow):
             return False
 
     def load_data(self):
-        conn = sqlite3.connect('systema.db')
+        conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
 
         self.tableWidget.setColumnCount(8)
@@ -203,10 +203,10 @@ class Admin(QMainWindow):
 
             conn.commit()
             conn.close()
-            QMessageBox.warning(self, "Информация", "Обновлен пользователь {user_id}: {field_name} = '{new_value}'")
+            QMessageBox.warning(self, f"Информация", f"Обновлен пользователь {user_id}: {field_name} = '{new_value}'")
 
         except Exception as e:
-            QMessageBox.warning(self, "Ошибка", "Ошибка БД при обновлении {field_name}: {e}")
+            QMessageBox.warning(self, f"Ошибка", f"Ошибка БД при обновлении {field_name}: {e}")
 
 
     def on_app_clicked(self,item):

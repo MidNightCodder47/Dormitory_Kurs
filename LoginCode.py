@@ -15,6 +15,7 @@ class Login(QMainWindow):
         try:
             uic.loadUi('Login.ui',self)
             self.setWindowTitle("Личный кабинет")
+            self.setFixedSize(self.size())
             self.current_id = None
             self.logIn_btn.clicked.connect(self.on_login_clicked)
             self.checkBox.toggled.connect(self.toggle_login_password_visibility)
