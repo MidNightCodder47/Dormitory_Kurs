@@ -1,13 +1,19 @@
 import sys
 import sqlite3
+from datetime import date
+
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QListWidgetItem, QWidget, QVBoxLayout, QLabel, \
     QTableWidget, QHeaderView, QMenu, QMessageBox
 from pathlib import Path
+import pandas as pd
+
 
 from PyQt6 import QtGui
+from openpyxl import Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
 
 import app_win_text_code,addUserCode,PostCode
 import chngsumCode
@@ -38,7 +44,11 @@ class Admin(QMainWindow):
         try:
             uic.loadUi('adminwindow.ui', self)
             self.setWindowTitle("Панель администратора")
+
+            self.all_users_data = []
+
             self.tableWidget.setEditTriggers(QTableWidget.EditTrigger.DoubleClicked)
+            self.search.textChanged.connect(self.filter_table)
             self.setup_window()
             self.load_data()
             self.addUserBtn.clicked.connect(self.on_addusr_clicked)
@@ -46,7 +56,10 @@ class Admin(QMainWindow):
             self.addpost.clicked.connect(self.on_add_post_clicked)
             self.changesumma.clicked.connect(self.chng_sum_clicked)
             self.add_operation.clicked.connect(self.add_oper_clicked)
+            self.exportbtn.clicked.connect(self.export())
             self.fill_posts()
+
+
         except Exception as e:
             print("Admin initialization / adminCode")
             print(e)
@@ -66,6 +79,34 @@ class Admin(QMainWindow):
         window_geometry.moveCenter(center_point)
         self.move(window_geometry.topLeft())
 
+    def filter_table(self):
+        search_text = self.search.text().lower().strip()
+
+        if not search_text:
+            self.display_filtered_data(self.all_users_data)
+            return
+
+        filtered_rows = []
+        search_text_lower = search_text.lower()
+
+        for row in self.all_users_data:
+            if any(search_text_lower in str(value).lower() for value in row):
+                filtered_rows.append(row)
+
+        self.display_filtered_data(filtered_rows)
+
+
+    def display_filtered_data(self, rows):
+        self.tableWidget.blockSignals(True)
+        self.tableWidget.setRowCount(0)
+        self.tableWidget.setRowCount(len(rows))
+
+        for row_num, row in enumerate(rows):
+            for col_num, value in enumerate(row):
+                self.tableWidget.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+        self.tableWidget.blockSignals(False)
+
     def show_context_menu(self, position):
         try:
             row = self.tableWidget.rowAt(position.y())
@@ -82,6 +123,7 @@ class Admin(QMainWindow):
             menu.exec(self.tableWidget.viewport().mapToGlobal(position))
         except Exception as e:
             print(e)
+
     def delete_user(self, row):
         try:
             lastname = self.tableWidget.item(row, 1).text()
@@ -131,11 +173,16 @@ class Admin(QMainWindow):
 
         c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
         rows = c.fetchall()
+        self.all_users_data = rows
+
+        self.tableWidget.blockSignals(True)
 
         self.tableWidget.setRowCount(len(rows))
         for row_num, row in enumerate(rows):
             for col_num, value in enumerate(row):
                 self.tableWidget.setItem(row_num, col_num, QTableWidgetItem(str(value)))
+
+        self.tableWidget.blockSignals(False)
 
         self.tableWidget.cellChanged.connect(self.on_cell_changed)
 
@@ -157,12 +204,39 @@ class Admin(QMainWindow):
             self.appList.addItem(app)
         conn.commit()
         conn.close()
+
+    def export(self):
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
+        c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
+        rows = c.fetchall()
+
+        df = pd.DataFrame(rows)
+        total_people = len(df)
+
+        workbook = Workbook()
+        worksheet = workbook.active
+        worksheet.title = "Проживающие"
+
+        worksheet.append([f'ВСЕГО ЛЮДЕЙ: {total_people}'])
+        worksheet.append([])
+
+        worksheet.append(["id","Фамилия","Имя","Отчество", "Комната", "Договор","Телефон","Почта"])
+        for row in dataframe_to_rows(df, index=False, header=False):
+            worksheet.append(row)
+        path = Path.home() / "Downloads" / f"Проживающие Отчет {str(date.today())}.xlsx"
+        workbook.save(path)
+
+        conn.close()
+
+
     def user_upd(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
         c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
         rows = c.fetchall()
-        self.tableWidget.cellChanged.disconnect(self.on_cell_changed)
+
+        self.tableWidget.blockSignals(True)
         self.tableWidget.clear()
 
         self.tableWidget.setColumnCount(8)
@@ -170,10 +244,12 @@ class Admin(QMainWindow):
             ["id", "Фамилия", "Имя", "Отчество", "Комната", "Договор", "Телефон", "Почта"])
 
         self.tableWidget.setRowCount(len(rows))
+
         for row_num, row in enumerate(rows):
             for col_num, value in enumerate(row):
                 self.tableWidget.setItem(row_num, col_num, QTableWidgetItem(str(value)))
-        self.tableWidget.cellChanged.connect(self.on_cell_changed)
+
+        self.tableWidget.blockSignals(False)
 
         conn.close()
     def on_cell_changed(self, row, column):
