@@ -1,3 +1,4 @@
+from PyQt6.QtCore import QDate
 from PyQt6.QtGui import  QMouseEvent
 from PyQt6.QtWidgets import QDialog, QApplication, QLabel, QWidget, QVBoxLayout, QListWidget, QListWidgetItem
 from PyQt6 import QtGui,uic
@@ -23,6 +24,7 @@ class TextItemWidget(QWidget):
         font.setPointSize(13)
         self.label.setFont(font)
         self.label.setWordWrap(True)
+
         self.label.setContentsMargins(10,5,10,5)
 
         layout.addWidget(self.label)
@@ -43,8 +45,10 @@ class MainUserWindow(QDialog):
         self.fill_posts()
         self.get_user_data()
         self.load_operations()
+        self.change_date_post()
         self.button_add_doc.clicked.connect(self.on_add_app_clicked)
         self.appList.itemClicked.connect(self.on_app_clicked)
+        self.excBtn.clicked.connect(self.fill_posts)
 
     def setup_window(self):
         screen = QApplication.primaryScreen()
@@ -98,7 +102,6 @@ class MainUserWindow(QDialog):
             label.setFont(font)
 
             self.neighboursList.addItem(label)
-
 
 
         c.execute(
@@ -184,22 +187,41 @@ class MainUserWindow(QDialog):
         for summa,oper_text,oper_date in operations:
             app_text = f"{summa} {oper_text} {oper_date}"
             app = QListWidgetItem(app_text)
-
             font = QtGui.QFont()
             font.setFamily("Bahnschrift")
             font.setPointSize(13)
-
             app.setFont(font)
-
             self.operationsList.addItem(app)
         conn.close()
 
     def fill_posts(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
+        self.postList.clear()
         c.execute('''SELECT post_title, post_date FROM post ORDER BY id_post DESC''')
         posts = c.fetchall()
 
+        for post_title, post_date in posts:
+            text = f"{post_title}\n\n{post_date}"
+            widget = TextItemWidget(text)
+            item = QListWidgetItem()
+            item.setSizeHint(widget.sizeHint())
+
+            self.postList.addItem(item)
+            self.postList.setItemWidget(item, widget)
+        conn.close()
+    def change_date_post(self):
+        self.dateEdit.setDate(QDate.currentDate())
+        self.dateEdit.setCalendarPopup(True)
+        self.dateEdit.setDisplayFormat("yyyy-MM-dd")
+        self.dateEdit.dateChanged.connect(self.date_post)
+    def date_post(self,date):
+        conn = sqlite3.connect('hotel.db')
+        c = conn.cursor()
+
+        self.postList.clear()
+        c.execute('''SELECT post_title, post_date FROM post WHERE post_date = ? ORDER BY id_post DESC''',(date.toString('yyyy-MM-dd'),))
+        posts = c.fetchall()
         for post_title, post_date in posts:
             text = f"{post_title}\n\n{post_date}"
             widget = TextItemWidget(text)

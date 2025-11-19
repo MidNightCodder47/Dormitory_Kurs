@@ -6,7 +6,7 @@ from PyQt6 import uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QListWidgetItem, QWidget, QVBoxLayout, QLabel, \
-    QTableWidget, QHeaderView, QMenu, QMessageBox
+    QTableWidget, QMenu, QMessageBox
 from pathlib import Path
 import pandas as pd
 
@@ -51,13 +51,14 @@ class Admin(QMainWindow):
             self.search.textChanged.connect(self.filter_table)
             self.setup_window()
             self.load_data()
+            self.fill_posts()
             self.addUserBtn.clicked.connect(self.on_addusr_clicked)
             self.appList.itemClicked.connect(self.on_app_clicked)
             self.addpost.clicked.connect(self.on_add_post_clicked)
             self.changesumma.clicked.connect(self.chng_sum_clicked)
             self.add_operation.clicked.connect(self.add_oper_clicked)
-            self.exportbtn.clicked.connect(self.export())
-            self.fill_posts()
+            self.exportbtn.clicked.connect(self.export)
+
 
 
         except Exception as e:
@@ -208,7 +209,7 @@ class Admin(QMainWindow):
     def export(self):
         conn = sqlite3.connect('hotel.db')
         c = conn.cursor()
-        c.execute('SELECT id_user, lastname, firstname,patronymic,room_num,contract,phone, mail  FROM user')
+        c.execute('SELECT id_user, lastname, firstname,patronymic,contract,phone  FROM user')
         rows = c.fetchall()
 
         df = pd.DataFrame(rows)
@@ -221,7 +222,7 @@ class Admin(QMainWindow):
         worksheet.append([f'ВСЕГО ЛЮДЕЙ: {total_people}'])
         worksheet.append([])
 
-        worksheet.append(["id","Фамилия","Имя","Отчество", "Комната", "Договор","Телефон","Почта"])
+        worksheet.append(["id","Фамилия","Имя","Отчество", "Договор","Телефон"])
         for row in dataframe_to_rows(df, index=False, header=False):
             worksheet.append(row)
         path = Path.home() / "Downloads" / f"Проживающие Отчет {str(date.today())}.xlsx"
